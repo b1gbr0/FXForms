@@ -91,7 +91,6 @@ static NSString *const FXFormsException = @"FXFormsException";
 
 static const CGFloat FXFormFieldLabelSpacing = 5;
 static const CGFloat FXFormFieldMinLabelWidth = 97;
-static const CGFloat FXFormFieldMaxLabelWidth = 240;
 static const CGFloat FXFormFieldMinFontSize = 12;
 static const CGFloat FXFormFieldPaddingLeft = 10;
 static const CGFloat FXFormFieldPaddingRight = 10;
@@ -2897,9 +2896,13 @@ static void FXFormPreprocessFieldDictionary(NSMutableDictionary *dictionary)
     [super layoutSubviews];
     
     CGRect labelFrame = self.textLabel.frame;
-    labelFrame.size.width = MIN(MAX([self.textLabel sizeThatFits:CGSizeZero].width, FXFormFieldMinLabelWidth), FXFormFieldMaxLabelWidth);
+
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
+    CGFloat maxLabelWidth = screenRect.size.width * 3 / 4;
+
+    labelFrame.size.width = MIN(MAX([self.textLabel sizeThatFits:CGSizeZero].width, FXFormFieldMinLabelWidth), maxLabelWidth);
     self.textLabel.frame = labelFrame;
-    
+
     CGRect textFieldFrame = self.textField.frame;
     textFieldFrame.origin.x = self.textLabel.frame.origin.x + MAX(FXFormFieldMinLabelWidth, self.textLabel.frame.size.width) + FXFormFieldLabelSpacing;
     textFieldFrame.origin.y = (self.contentView.bounds.size.height - textFieldFrame.size.height) / 2;
@@ -3100,10 +3103,13 @@ static void FXFormPreprocessFieldDictionary(NSMutableDictionary *dictionary)
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    
+
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
+    CGFloat maxLabelWidth = screenRect.size.width * 3 / 4;
+
     CGRect labelFrame = self.textLabel.frame;
     labelFrame.origin.y = FXFormFieldPaddingTop;
-    labelFrame.size.width = MIN(MAX([self.textLabel sizeThatFits:CGSizeZero].width, FXFormFieldMinLabelWidth), FXFormFieldMaxLabelWidth);
+    labelFrame.size.width = MIN(MAX([self.textLabel sizeThatFits:CGSizeZero].width, FXFormFieldMinLabelWidth), maxLabelWidth);
     self.textLabel.frame = labelFrame;
     
     CGRect textViewFrame = self.textView.frame;
