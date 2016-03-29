@@ -766,6 +766,9 @@ static void FXFormPreprocessFieldDictionary(NSMutableDictionary *dictionary)
         } else {
             _cellConfig = [NSMutableDictionary dictionary];
         }
+        if ([attributes[FXFormFieldKey] isKindOfClass:[NSString class]]) {
+            _key = attributes[FXFormFieldKey];
+        }
         [attributes enumerateKeysAndObjectsUsingBlock:^(NSString *key, id value, __unused BOOL *stop) {
             [self setValue:value forKey:key];
         }];
