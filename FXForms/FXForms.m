@@ -3402,7 +3402,13 @@ static void FXFormPreprocessFieldDictionary(NSMutableDictionary *dictionary)
     {
         self.datePicker.datePickerMode = UIDatePickerModeDateAndTime;
     }
-    
+    if([self.field.value isKindOfClass:[NSString class]]) {
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        NSTimeZone *timeZone = [NSTimeZone localTimeZone];
+        [formatter setTimeZone:timeZone];
+        [formatter setDateFormat : @"yyyy-M-d"];
+        self.field.value = [formatter dateFromString:self.field.value] ;
+    }
     self.datePicker.date = self.field.value ?: ([self.field.placeholder isKindOfClass:[NSDate class]]? self.field.placeholder: [NSDate date]);
 }
 
