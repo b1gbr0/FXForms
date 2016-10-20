@@ -96,7 +96,7 @@ static const CGFloat FXFormFieldPaddingLeft = 10;
 static const CGFloat FXFormFieldPaddingRight = 10;
 static const CGFloat FXFormFieldPaddingTop = 12;
 static const CGFloat FXFormFieldPaddingBottom = 12;
-
+static const CGFloat FXFormFieldVerticalLabelSpacing = 6;
 
 static Class FXFormClassFromString(NSString *className)
 {
@@ -3248,6 +3248,21 @@ static void FXFormPreprocessFieldDictionary(NSMutableDictionary *dictionary)
 
 @implementation FXFormSwitchCell
 
++(CGFloat)heightForField:(FXFormField *)field width:(CGFloat)width
+{
+    static UITextView *textView;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        textView = [[UITextView alloc] init];
+        textView.font = [UIFont systemFontOfSize:17];
+    });
+
+    textView.text = field.title;
+    CGSize textViewSize = [textView sizeThatFits:CGSizeMake(width - FXFormFieldPaddingLeft - FXFormFieldPaddingRight, FLT_MAX)];
+    CGFloat height = ceilf(textViewSize.height) + FXFormFieldVerticalLabelSpacing * 2;
+    return height;
+}
+
 - (void)setUp
 {
     self.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -3257,6 +3272,8 @@ static void FXFormPreprocessFieldDictionary(NSMutableDictionary *dictionary)
 
 - (void)update
 {
+    self.textLabel.numberOfLines = 0;
+    self.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
     self.textLabel.text = self.field.title;
     self.textLabel.accessibilityValue = self.textLabel.text;
     self.switchControl.on = [self.field.value boolValue];
